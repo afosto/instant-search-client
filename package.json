@@ -1,0 +1,62 @@
+{
+  "name": "@afosto/instant-search-client",
+  "version": "0.1.0",
+  "private": false,
+  "description": "The Afosto InstantSearch client",
+  "main": "./dist/afosto-instant-search.min.js",
+  "module": "./dist/esm/index.js",
+  "browser": "./dist/afosto-instant-search.min.js",
+  "cjs": "./dist/cjs/index.js",
+  "source": "src/index.js",
+  "sideEffects": false,
+  "bugs": {
+    "url": "https://github.com/afosto/instant-search-client/issues"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "cleanup": "rimraf dist",
+    "prebuild": "rimraf dist",
+    "build": "cross-env NODE_ENV=production rollup -c",
+    "start": "webpack serve --open",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "search",
+    "instantsearch",
+    "client"
+  ],
+  "author": "Afosto Saas BV",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/afosto/instant-search-client.git"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.5",
+    "@babel/plugin-transform-runtime": "^7.16.5",
+    "@babel/preset-env": "^7.16.5",
+    "@rollup/plugin-babel": "^5.3.0",
+    "@rollup/plugin-commonjs": "^21.0.1",
+    "@rollup/plugin-node-resolve": "^13.1.1",
+    "babel-loader": "^8.2.3",
+    "clean-webpack-plugin": "^3.0.0",
+    "core-js": "^3.20.0",
+    "cross-env": "^7.0.3",
+    "html-webpack-plugin": "^5.5.0",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.61.1",
+    "rollup-plugin-terser": "^7.0.2",
+    "webpack": "^5.65.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.6.0"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}

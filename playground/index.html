@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Test</title>
+        <link
+                rel="stylesheet"
+                href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/algolia-min.css"
+        />
+        <style>
+            .ais-Hits-list-item img {
+                margin-right: 10px;
+            }
+
+            .ais-Hits-list-item .hit-name {
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+
+            .ais-Hits-list-item .hit-release-date {
+                margin-bottom: 10px;
+            }
+
+            .ais-Pagination-list li {
+                display: inline;
+                padding: 8px;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <div style="display:flex">
+                <div id="searchbox"></div>
+            </div>
+            <div style="display:flex">
+                <div style="padding:20px">
+                    <h2>Brands</h2>
+                    <div id="brand-list"></div>
+
+                    <h2>Price</h2>
+                    <div id="range-slider"></div>
+                </div>
+                <div style="flex:1;padding:20px">
+                    <div>
+                        <h2>Products</h2>
+                        <div id="stats-products"></div>
+                        <div id="hits-products"></div>
+                    </div>
+                    <div style="display:flex">
+                        <div id="hits-per-page"></div>
+                        <div id="pagination"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@latest/dist/instantsearch.production.min.js" integrity="sha256-2IhR6D0EWonVYvGbuQADSjD9VROGINJw9A8RFZEHXAM=" crossorigin="anonymous"></script>
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            const searchClient = afostoInstantSearch('prxxx');
+            const search = instantsearch({
+              indexName: 'products',
+              searchClient,
+            });
+
+            search.addWidgets([
+                instantsearch.widgets.searchBox({
+                    container: '#searchbox',
+                }),
+
+                instantsearch.widgets.hitsPerPage({
+                    container: '#hits-per-page',
+                    items: [
+                        { label: '10 hits per page', value: 10, default: true },
+                        { label: '20 hits per page', value: 20 },
+                    ],
+                }),
+
+                instantsearch.widgets.refinementList({
+                    container: '#brand-list',
+                    attribute: 'merk',
+                    searchable: false,
+                    showMore: true,
+                    showMoreLimit: 500,
+                }),
+
+                instantsearch.widgets.rangeSlider({
+                    container: '#range-slider',
+                    attribute: 'price',
+                    precision: 0,
+                    step: 1,
+                }),
+
+                instantsearch.widgets.pagination({
+                    container: '#pagination',
+                }),
+
+                instantsearch.widgets.stats({
+                    container: '#stats-products',
+                    templates: {
+                        text: `
+                          {{#hasNoResults}}No results{{/hasNoResults}}
+                          {{#hasOneResult}}1 result{{/hasOneResult}}
+                          {{#hasManyResults}}{{#helpers.formatNumber}}{{nbHits}}{{/helpers.formatNumber}} results{{/hasManyResults}}
+                          found
+                        `,
+                    },
+                }),
+
+                instantsearch.widgets.hits({
+                    container: '#hits-products',
+                    templates: {
+                        item: `
+                            <div class="ais-Hits-list-item">
+                              <img src="{{metadata.image}}" align="left" alt="{{metadata.name}}" width="100" />
+                              <div class="hit-name">
+                                {{metadata.name}}
+                              </div>
+                              <div class="hit-release-date">Brand: {{metadata.brand}}</div>
+                              <div class="hit-description">
+                                &euro;{{metadata.price}}
+                              </div>
+                            </div>
+                          `,
+                    },
+                }),
+            ]);
+
+            search.start();
+          });
+        </script>
+    </body>
+</html>
