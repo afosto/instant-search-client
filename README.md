@@ -41,7 +41,7 @@ npm install @afosto/instant-search-client react-instantsearch-dom
 This library supports the **last two** versions of major browsers (Chrome, Edge, Firefox, Safari).
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@afosto/instant-search-client/dist/afosto-instant-search-client.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@afosto/instant-search-client@latest/dist/afosto-instant-search.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js"></script>
 ```
 
