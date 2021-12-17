@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://content.afosto.io/5719193282412544/brand/AFO-Logo-compleet-kleur-RGBat4x.png?w=268" alt="Afosto" />
+  <a href="https://afosto.com"><img src="https://content.afosto.io/5719193282412544/brand/AFO-Logo-compleet-kleur-RGBat4x.png?w=268" alt="Afosto" /></a>
 </p>
 
 <h1 align="center">Afosto Instant Search Client</h1>
