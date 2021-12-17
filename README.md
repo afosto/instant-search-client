@@ -17,8 +17,6 @@ This library is an Afosto search client plugin for the open-source <a href="http
 
 ## Installation
 
----
-
 ### Yarn / NPM
 
 ## Basic
@@ -48,8 +46,6 @@ This library supports the **last two** versions of major browsers (Chrome, Edge,
 ```
 
 ## Getting started
-
----
 
 First you initialize the Afosto search client with your **proxy key**. This proxy key can be found in the Afosto app.
 
@@ -115,13 +111,9 @@ For more information check the React InstantSearch [documentation](https://www.a
 
 ## Compatibility
 
----
-
 - InstantSearch.js v4
 - Node >= 12.10
 
 ## License
-
----
 
 This project is licensed under the terms of the [MIT license](https://github.com/afosto/instant-search-client/blob/master/LICENSE).
