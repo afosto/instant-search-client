@@ -17,21 +17,23 @@ This library is an Afosto search client plugin for the open-source <a href="http
 
 ## Installation
 
-### Yarn / NPM
-
-## Basic
+### Basic
 
 ```sh
+# Install with Yarn
 yarn add @afosto/instant-search-client instantsearch.js
-# or
+
+# Install with NPM
 npm install @afosto/instant-search-client instantsearch.js
 ```
 
-## React
+### React
 
 ```sh
+# Install with Yarn
 yarn add @afosto/instant-search-client react-instantsearch-dom
-# or
+
+# Install with NPM
 npm install @afosto/instant-search-client react-instantsearch-dom
 ```
 
