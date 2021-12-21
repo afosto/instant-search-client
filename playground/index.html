@@ -37,6 +37,9 @@
                     <h2>Brands</h2>
                     <div id="brand-list"></div>
 
+                    <h2>Color</h2>
+                    <div id="color-list"></div>
+
                     <h2>Price</h2>
                     <div id="range-slider"></div>
                 </div>
@@ -78,10 +81,20 @@
                 instantsearch.widgets.refinementList({
                     container: '#brand-list',
                     attribute: 'merk',
+                    operator: 'and',
                     searchable: false,
                     showMore: true,
                     showMoreLimit: 500,
                 }),
+
+              instantsearch.widgets.refinementList({
+                container: '#color-list',
+                attribute: 'kleur',
+                operator: 'and',
+                searchable: true,
+                showMore: true,
+                showMoreLimit: 500,
+              }),
 
                 instantsearch.widgets.rangeSlider({
                     container: '#range-slider',

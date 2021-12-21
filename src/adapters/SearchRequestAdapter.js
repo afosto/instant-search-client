@@ -12,7 +12,13 @@ const SearchRequestAdapter = () => {
    * @returns {Array}
    */
   const transformFacets = request => {
-    return request?.params?.facets || [];
+    const requestFacets = request?.params?.facets;
+
+    if (requestFacets && typeof requestFacets === 'string') {
+      return [requestFacets];
+    }
+
+    return requestFacets || [];
   };
 
   /**
@@ -22,7 +28,12 @@ const SearchRequestAdapter = () => {
    */
   const transformFacetFilters = filters => {
     return (filters || []).reduce((acc, facetFilters) => {
-      const [filter] = facetFilters;
+      let filter = facetFilters;
+
+      if (Array.isArray(facetFilters)) {
+        filter = facetFilters[0];
+      }
+
       const [key, value] = filter?.split(':') ?? [];
 
       if (key && value) {
@@ -67,15 +78,6 @@ const SearchRequestAdapter = () => {
   };
 
   /**
-   * Transform the indices of the instant search requests to Afosto request indices.
-   * @param {Array} requests
-   * @returns {Array}
-   */
-  const transformIndices = requests => {
-    return [...new Set(requests.map(request => request.indexName).filter(indexName => !!indexName))];
-  };
-
-  /**
    * Transform the pagination of the instant search request to Afosto request pagination.
    * @param {Object} request
    * @param {Object} options
@@ -104,21 +106,21 @@ const SearchRequestAdapter = () => {
    * @returns {Object}
    */
   const transform = (requests, options = {}) => {
-    const [searchRequest] = requests || [];
-    const facets = transformFacets(searchRequest);
-    const filters = transformFilters(searchRequest);
-    const indices = transformIndices(requests);
-    const pagination = transformPagination(searchRequest, options);
-    const query = transformQuery(searchRequest);
+    return requests.reduce((acc, request) => {
+      const facets = transformFacets(request);
+      const filters = transformFilters(request);
+      const pagination = transformPagination(request, options);
+      const query = transformQuery(request);
 
-    return {
-      facets,
-      filters,
-      indices,
-      q: query,
-      threshold: options.threshold || DEFAULT_OPTIONS.threshold,
-      ...pagination,
-    };
+      return [...acc, {
+        facets,
+        filters,
+        indices: [request.indexName],
+        q: query,
+        threshold: options.threshold || DEFAULT_OPTIONS.threshold,
+        ...pagination,
+      }];
+    }, []);
   };
 
   return { transform };

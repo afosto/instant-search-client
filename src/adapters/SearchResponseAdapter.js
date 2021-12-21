@@ -38,13 +38,13 @@ const SearchResponseAdapter = () => {
   };
 
   /**
-   * Transform the Afosto response to responses for each instant search request.
+   * Transform Afosto request response to instant search results.
    * @param {Object} response
-   * @param {Array} requests
+   * @param {Object} request
    * @param {Object} options
-   * @returns {Array}
+   * @returns {Object}
    */
-  const transformResults = (response, requests, options = {}) => {
+  const transform = (response, request, options = {}) => {
     const results = (response?.results ?? []).reduce(
       (acc, result) => {
         return {
@@ -57,25 +57,10 @@ const SearchResponseAdapter = () => {
       },
       {},
     );
+    const { indexName } = request ?? {};
+    const indexResults = results[indexName] || {};
 
-    return requests.reduce((acc, request) => {
-      const { indexName } = request ?? {};
-      const indexResults = results[indexName] || {};
-
-      return [...acc, transformIndexResults(indexResults, request, options)];
-    }, []);
-  };
-
-  /**
-   * Transform Afosto request response to instant search results.
-   * @param {Object} response
-   * @param {Array} requests
-   * @param {Object} options
-   * @returns {Object}
-   */
-  const transform = (response, requests, options = {}) => {
-    const results = transformResults(response, requests, options);
-    return { results };
+    return transformIndexResults(indexResults, request, options);
   };
 
   return { transform };
