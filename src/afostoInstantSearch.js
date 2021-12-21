@@ -31,20 +31,32 @@ const afostoInstantSearch = (proxyId, options) => {
 
   const search = async requests => {
     try {
-      const searchContext = searchRequestAdapter.transform(requests, clientOptions);
+      const searchContexts = searchRequestAdapter.transform(requests, clientOptions);
+      const [searchRequestContext] = searchContexts;
 
-      if (!clientOptions.allowEmptyQuery && !searchContext.q) {
+      if (!clientOptions.allowEmptyQuery && !searchRequestContext?.q) {
         return searchResponseAdapter.transform({}, requests, clientOptions);
       }
 
-      const response = await searchRequest(searchContext);
-      return searchResponseAdapter.transform(response, requests, clientOptions);
+      const promises = searchContexts.map(context => searchRequest(context));
+      const responses = await Promise.allSettled(promises);
+      const responseValues = responses.map(response => response.value || {});
+
+      const results = requests.reduce((acc, request, idx) => {
+        const response = searchResponseAdapter.transform(responseValues[idx], request, clientOptions);
+        return [...acc, response];
+      }, []);
+
+      return { results };
     } catch (err) {
       return searchResponseAdapter.transform({}, requests, clientOptions);
     }
   };
 
-  const searchForFacetValues = async () => ({});
+  const searchForFacetValues = async () => {
+    console.warn("The Afosto instant search client currently doesn't support searching for facet values");
+    return { facetHits: [] };
+  }
 
   return {
     search,
