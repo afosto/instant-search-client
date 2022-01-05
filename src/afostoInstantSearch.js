@@ -18,15 +18,23 @@ const afostoInstantSearch = (proxyId, options) => {
   const searchResponseAdapter = SearchResponseAdapter();
 
   const searchRequest = async context => {
-    const searchResponse = await fetch(`https://api.afosto.io/cnt/instant/search/${proxyId}`, {
+    const url = clientOptions.baseUrl?.replace('{proxyId}', proxyId);
+    const requestOptions = clientOptions.requestOptions || {};
+    const hasContextFormatter = clientOptions.transformContext && typeof clientOptions.transformContext === 'function';
+    const hasResponseFormatter = clientOptions.transformResponse && typeof clientOptions.transformResponse === 'function';
+    const payload = hasContextFormatter ? clientOptions.transformContext(context) : context;
+    const searchResponse = await fetch(url, {
+      ...requestOptions,
+      method: 'POST',
       headers: {
         Accept: 'application/vnd.instantsearch+json',
+        ...(requestOptions.headers || {}),
       },
-      method: 'POST',
-      body: JSON.stringify(context),
+      body: JSON.stringify(payload),
     });
+    const response = searchResponse.json();
 
-    return searchResponse.json();
+    return hasResponseFormatter ? clientOptions.transformResponse(response) : response;
   }
 
   const search = async requests => {
