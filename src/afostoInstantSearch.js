@@ -32,7 +32,7 @@ const afostoInstantSearch = (proxyId, options) => {
       },
       body: JSON.stringify(payload),
     });
-    const response = searchResponse.json();
+    const response = await searchResponse.json();
 
     return hasResponseFormatter ? clientOptions.transformResponse(response) : response;
   }
