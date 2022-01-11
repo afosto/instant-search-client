@@ -20,7 +20,7 @@ const SearchResponseAdapter = () => {
     const facets = results.facets ?? {};
     const facetsStats = results.facets_stats ?? {};
     const nbHits = results.count ?? 0;
-    const nbPages = Math.floor(nbHits / hitsPerPage);
+    const nbPages = Math.ceil(nbHits / hitsPerPage);
     const index = results.id ?? request?.indexName;
 
     return {
