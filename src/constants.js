@@ -8,7 +8,7 @@ export const DEFAULT_OPTIONS = {
   transformResponse: data => data,
 };
 
-export const MATCH_FILTER_REGEX = /(?<key>\w+)(?<operator>>=|>|<|<=|=)(?<value>\d+)/g;
+export const MATCH_FILTER_REGEX = /(?<key>[\w'-]+)(?<operator>>=|>|<|<=|=)(?<value>\d+)/g;
 
 export const OPERATOR_CONVERSION = {
   '>=': 'gte',
