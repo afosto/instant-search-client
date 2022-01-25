@@ -13,8 +13,6 @@
 This library is an Afosto search client plugin for the open-source <a href="https://github.com/algolia/instantsearch.js">InstantSearch.js</a> library (powered by Algolia). With this plugin you can use the amazing widgets of the InstantSearch.js library, while communicating with the Afosto search API.
 </p>
 
-## 🚧 Currently in development 🚧
-
 ## Installation
 
 ### Basic
@@ -114,7 +112,7 @@ For more information check the React InstantSearch [documentation](https://www.a
 ## Compatibility
 
 - InstantSearch.js v4
-- Node >= 12.10
+- Node >= 14
 
 ## License
 
