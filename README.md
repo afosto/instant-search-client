@@ -47,14 +47,14 @@ This library supports the **last two** versions of major browsers (Chrome, Edge,
 
 ## Getting started
 
-First you initialize the Afosto search client with your **proxy key**. This proxy key can be found in the Afosto app.
+First you initialize the Afosto search client with your **search engine key**. This search engine key can be found in the Afosto app.
 
 ### ES6
 
 ```js
 import { afostoInstantSearch } from '@afosto/instant-search-client';
 
-const client = afostoInstantSearch('proxy-key');
+const client = afostoInstantSearch('my-search-engine-key');
 ```
 
 ### CJS
@@ -62,13 +62,13 @@ const client = afostoInstantSearch('proxy-key');
 ```js
 const { afostoInstantSearch } = require('@afosto/instant-search-client');
 
-const client = afostoInstantSearch('proxy-key');
+const client = afostoInstantSearch('my-search-engine-key');
 ```
 
 ### Browser
 
 ```js
-const client = afostoInstantSearch('proxy-key');
+const client = afostoInstantSearch('my-search-engine-key');
 ```
 
 ## Usage
@@ -78,7 +78,7 @@ const client = afostoInstantSearch('proxy-key');
 ### Basic
 
 ```js
-const client = afostoInstantSearch('proxy-key');
+const client = afostoInstantSearch('my-search-engine-key');
 const search = instantsearch({
   indexName: 'my-index',
   searchClient: client,
@@ -97,7 +97,7 @@ You can use the initialized Afosto client with the [React InstantSearch](https:/
 import { afostoInstantSearch } from '@afosto/instant-search-client';
 import { InstantSearch, SearchBox, Hits } from 'react-instantsearch-dom';
 
-const searchClient = afostoInstantSearch('proxy-key');
+const searchClient = afostoInstantSearch('my-search-engine-key');
 
 const App = () => (
   <InstantSearch searchClient={searchClient} indexName="my-index">
