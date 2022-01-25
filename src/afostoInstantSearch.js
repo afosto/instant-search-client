@@ -30,7 +30,7 @@ const afostoInstantSearch = (proxyId, options) => {
         Accept: 'application/vnd.instantsearch+json',
         ...(requestOptions.headers || {}),
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({ data: payload }),
     });
     const response = await searchResponse.json();
 
