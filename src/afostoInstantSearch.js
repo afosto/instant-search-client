@@ -3,14 +3,14 @@ import { DEFAULT_OPTIONS } from './constants';
 
 /**
  * Afosto instant search client
- * @param {String} proxyId
+ * @param {String} searchEngineKey
  * @param {Object} options
  * @returns {Object}
  * @constructor
  */
-const afostoInstantSearch = (proxyId, options) => {
-  if (!proxyId) {
-    throw new Error('A proxyId is required to use the Afosto instant search client.')
+const afostoInstantSearch = (searchEngineKey, options = {}) => {
+  if (!searchEngineKey) {
+    throw new Error('A search engine key is required to use the Afosto instant search client.')
   }
 
   const clientOptions = { ...DEFAULT_OPTIONS, ...(options ?? {}) };
@@ -18,7 +18,7 @@ const afostoInstantSearch = (proxyId, options) => {
   const searchResponseAdapter = SearchResponseAdapter();
 
   const searchRequest = async context => {
-    const url = clientOptions.baseUrl?.replace('{proxyId}', proxyId);
+    const url = clientOptions.baseUrl?.replace('{key}', searchEngineKey);
     const requestOptions = clientOptions.requestOptions || {};
     const hasContextFormatter = clientOptions.transformContext && typeof clientOptions.transformContext === 'function';
     const hasResponseFormatter = clientOptions.transformResponse && typeof clientOptions.transformResponse === 'function';

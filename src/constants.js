@@ -1,6 +1,6 @@
 export const DEFAULT_OPTIONS = {
   allowEmptyQuery: true,
-  baseUrl: 'https://afosto.io/api/instant/search/{proxyId}',
+  baseUrl: 'https://afosto.io/api/instant/search/{key}',
   hitsPerPage: 10,
   requestOptions: {},
   threshold: 1,
