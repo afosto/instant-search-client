@@ -85,9 +85,10 @@ const SearchRequestAdapter = () => {
    */
   const transformPagination = (request, options = {}) => {
     const { page, hitsPerPage } = request?.params ?? {};
-    const offset = page * hitsPerPage;
+    const limit = hitsPerPage || options.hitsPerPage;
+    const offset = page * limit;
 
-    return { limit: hitsPerPage || options.hitsPerPage, offset };
+    return { limit, offset };
   };
 
   /**
