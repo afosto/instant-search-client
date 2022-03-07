@@ -3,6 +3,7 @@ export const DEFAULT_OPTIONS = {
   baseUrl: 'https://afosto.io/api/instant/search/{key}',
   hitsPerPage: 10,
   requestOptions: {},
+  settingsRequestOptions: {},
   threshold: 1,
   transformContext: data => data,
   transformResponse: data => data,

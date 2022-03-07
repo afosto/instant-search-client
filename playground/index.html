@@ -3,22 +3,20 @@
     <head>
         <meta charset="UTF-8">
         <title>Test</title>
-        <link
-                rel="stylesheet"
-                href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/algolia-min.css"
-        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/algolia-min.css" />
         <style>
-            .ais-Hits-list-item img {
-                margin-right: 10px;
-            }
-
             .ais-Hits-list-item .hit-name {
                 font-weight: bold;
-                margin-bottom: 5px;
+                margin-bottom: 4px;
+                margin-top: 12px;
             }
 
-            .ais-Hits-list-item .hit-release-date {
-                margin-bottom: 10px;
+            .ais-Hits-list-item .hit-description {
+                margin-top: 12px;
+            }
+
+            .ais-Panel {
+                margin-bottom: 32px;
             }
 
             .ais-Pagination-list li {
@@ -30,20 +28,10 @@
     <body>
         <div>
             <div style="display:flex">
-                <div id="searchbox"></div>
-            </div>
-            <div style="display:flex">
-                <div style="padding:20px">
-                    <h2>Brands</h2>
-                    <div id="brand-list"></div>
-
-                    <h2>Supplier</h2>
-                    <div id="supplier-list"></div>
-
-                    <h2>Length</h2>
-                    <div id="range-slider"></div>
+                <div id="dynamic-list" style="padding:20px">
                 </div>
                 <div style="flex:1;padding:20px">
+                    <div id="searchbox"></div>
                     <div>
                         <h2>Products</h2>
                         <div id="stats-products"></div>
@@ -58,91 +46,101 @@
         </div>
         <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js" crossorigin="anonymous"></script>
         <script>
-          document.addEventListener('DOMContentLoaded', function() {
-            const searchClient = afostoInstantSearch('prxxx');
-            const search = instantsearch({
-              indexName: 'products',
-              searchClient,
-            });
+          async function initSearchDemo() {
+            try {
+              const searchClient = afostoInstantSearch('movies-demo');
+              const settings = await searchClient.getSettings();
+              const indexes = settings.indexes || [];
+              const [firstIndex] = indexes;
 
-            search.addWidgets([
+              if (!firstIndex) {
+                console.error('No index available');
+                return;
+              }
+
+              const { alias: indexName, filters = [] } = firstIndex;
+              const filterKeys = filters.map(filter => filter.key);
+              const search = instantsearch({
+                indexName,
+                searchClient,
+              });
+
+              search.addWidgets([
+                instantsearch.widgets.configure({
+                  facets: ['main_genre', 'release_year_range'],
+                }),
+
                 instantsearch.widgets.searchBox({
-                    container: '#searchbox',
+                  container: '#searchbox',
                 }),
 
                 instantsearch.widgets.hitsPerPage({
-                    container: '#hits-per-page',
-                    items: [
-                        { label: '10 hits per page', value: 10, default: true },
-                        { label: '20 hits per page', value: 20 },
-                    ],
+                  container: '#hits-per-page',
+                  items: [
+                    { label: '10 hits per page', value: 10, default: true },
+                    { label: '20 hits per page', value: 20 },
+                  ],
                 }),
 
-                instantsearch.widgets.refinementList({
-                    container: '#brand-list',
-                    attribute: 'Brand',
-                    operator: 'and',
-                    searchable: false,
-                    showMore: true,
-                    showMoreLimit: 500,
-                }),
-
-              instantsearch.widgets.refinementList({
-                container: '#supplier-list',
-                attribute: 'Supplier',
-                operator: 'and',
-                searchable: false,
-                showMore: true,
-                showMoreLimit: 500,
-              }),
-
-                instantsearch.widgets.rangeSlider({
-                    container: '#range-slider',
-                    attribute: 'Length',
-                    precision: 0,
-                    step: 1,
+                instantsearch.widgets.dynamicWidgets({
+                  container: '#dynamic-list',
+                  facets: [],
+                  transformItems(_, { results }) {
+                    return results.facets.map(facet => facet.name);
+                  },
+                  widgets: filterKeys.map((attribute) => (container) =>
+                    instantsearch.widgets.panel({
+                      templates: {
+                        header({ widgetParams: { attribute } = {} } = {}) {
+                          return attribute;
+                        },
+                      },
+                    })(instantsearch.widgets.refinementList)({ container, attribute, operator: 'and', searchable: false, showMore: true, showMoreLimit: 500 })
+                  ),
                 }),
 
                 instantsearch.widgets.pagination({
-                    container: '#pagination',
+                  container: '#pagination',
                 }),
 
                 instantsearch.widgets.stats({
-                    container: '#stats-products',
-                    templates: {
-                        text: `
+                  container: '#stats-products',
+                  templates: {
+                    text: `
                           {{#hasNoResults}}No results{{/hasNoResults}}
                           {{#hasOneResult}}1 result{{/hasOneResult}}
                           {{#hasManyResults}}{{#helpers.formatNumber}}{{nbHits}}{{/helpers.formatNumber}} results{{/hasManyResults}}
                           found
                         `,
-                    },
+                  },
                 }),
 
                 instantsearch.widgets.hits({
-                    container: '#hits-products',
-                    templates: {
-                        item: `
-                            <div class="ais-Hits-list-item">
-                              <img src="{{metadata.image}}" align="left" alt="{{metadata.name}}" width="100" />
-                              <div class="hit-name">
-                                {{title}}
-                              </div>
-                              <div class="hit-release-date">Brand: {{Brand}}</div>
-                              <div class="hit-release-date">Length: {{Length}}</div>
-                              <div class="hit-description">
-                                {{description}}
-                              </div>
-                              <div class="price">
-                                &euro;{{price}}
-                              </div>
-                            </div>
-                          `,
-                    },
+                  container: '#hits-products',
+                  templates: {
+                    item: `
+                        <div class="ais-Hits-list-item">
+                          <img src="{{poster}}" alt="{{title}}" width="100%" />
+                          <div class="hit-name">
+                            {{title}} ({{release_year}})
+                          </div>
+                          <div class="hit-description">
+                            {{description}}
+                          </div>
+                        </div>
+                      `,
+                  },
                 }),
-            ]);
+              ]);
 
-            search.start();
+              search.start();
+            } catch (error) {
+
+            }
+          }
+
+          document.addEventListener('DOMContentLoaded', function() {
+            initSearchDemo();
           });
         </script>
     </body>
