@@ -14,11 +14,26 @@ const afostoInstantSearch = (searchEngineKey, options = {}) => {
   }
 
   const clientOptions = { ...DEFAULT_OPTIONS, ...(options ?? {}) };
+  const url = clientOptions.baseUrl?.replace('{key}', searchEngineKey);
   const searchRequestAdapter = SearchRequestAdapter();
   const searchResponseAdapter = SearchResponseAdapter();
 
+  const getSettings = async () => {
+    try {
+      const settingsRequestOptions = clientOptions.settingsRequestOptions || {};
+      const settingsResponse = await fetch(`${url}/settings`, {
+        ...settingsRequestOptions,
+        method: 'GET',
+      });
+      const response = await settingsResponse.json();
+
+      return response.data;
+    } catch (error) {
+      return {};
+    }
+  };
+
   const searchRequest = async context => {
-    const url = clientOptions.baseUrl?.replace('{key}', searchEngineKey);
     const requestOptions = clientOptions.requestOptions || {};
     const hasContextFormatter = clientOptions.transformContext && typeof clientOptions.transformContext === 'function';
     const hasResponseFormatter = clientOptions.transformResponse && typeof clientOptions.transformResponse === 'function';
@@ -67,6 +82,7 @@ const afostoInstantSearch = (searchEngineKey, options = {}) => {
   }
 
   return {
+    getSettings,
     search,
     searchForFacetValues,
   };

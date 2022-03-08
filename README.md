@@ -89,6 +89,29 @@ search.start();
 
 For more information check the InstantSearch.js [documentation](https://www.algolia.com/doc/guides/building-search-ui/what-is-instantsearch/js/).
 
+### Basic with settings
+
+```js
+const client = afostoInstantSearch('my-search-engine-key');
+
+async function initSearch() {
+  const settings = await client.getSettings();
+  const [firstIndex] = settings.indexes || [];
+  
+  const search = instantsearch({
+    indexName: firstIndex,
+    searchClient: client,
+  });
+  
+  // Do something with the settings.
+  // For example render filters dynamically.
+
+  search.start(); 
+}
+
+initSearch();
+```
+
 ### React
 
 You can use the initialized Afosto client with the [React InstantSearch](https://github.com/algolia/react-instantsearch) library.
