@@ -1,3 +1,4 @@
+import { v4 as uuid } from 'uuid';
 import { SearchResponseAdapter, SearchRequestAdapter } from './adapters';
 import { DEFAULT_OPTIONS } from './constants';
 
@@ -33,11 +34,11 @@ const afostoInstantSearch = (searchEngineKey, options = {}) => {
     }
   };
 
-  const searchRequest = async context => {
+  const searchRequest = async contexts => {
     const requestOptions = clientOptions.requestOptions || {};
     const hasContextFormatter = clientOptions.transformContext && typeof clientOptions.transformContext === 'function';
     const hasResponseFormatter = clientOptions.transformResponse && typeof clientOptions.transformResponse === 'function';
-    const payload = hasContextFormatter ? clientOptions.transformContext(context) : context;
+    const payload = hasContextFormatter ? contexts.map(context => clientOptions.transformContext(context)) : contexts;
     const searchResponse = await fetch(url, {
       ...requestOptions,
       method: 'POST',
@@ -47,27 +48,27 @@ const afostoInstantSearch = (searchEngineKey, options = {}) => {
       },
       body: JSON.stringify({ data: payload }),
     });
-    const response = await searchResponse.json();
+    const responses = await searchResponse.json();
+    const formattedResponses = Array.isArray(responses) ? responses: [responses];
 
-    return hasResponseFormatter ? clientOptions.transformResponse(response) : response;
+    return hasResponseFormatter ? formattedResponses.map(response => clientOptions.transformResponse(response)) : formattedResponses;
   }
 
   const search = async requests => {
     try {
-      const searchContexts = searchRequestAdapter.transform(requests, clientOptions);
+      const searchRequests = requests.map(request => ({ ...request, __queryID: uuid() }));
+      const searchContexts = searchRequestAdapter.transform(searchRequests, clientOptions);
       const [searchRequestContext] = searchContexts;
 
       if (!clientOptions.allowEmptyQuery && !searchRequestContext?.q) {
-        return searchResponseAdapter.transform({}, requests, clientOptions);
+        return searchResponseAdapter.transform({}, searchRequests, clientOptions);
       }
 
-      const promises = searchContexts.map(context => searchRequest(context));
-      const responses = await Promise.allSettled(promises);
-      const responseValues = responses.map(response => response.value || {});
-
-      const results = requests.reduce((acc, request, idx) => {
-        const response = searchResponseAdapter.transform(responseValues[idx], request, clientOptions);
-        return [...acc, response];
+      const responses = await searchRequest(searchContexts);
+      const results = searchRequests.reduce((acc, request) => {
+        const response = responses.find(value => value.__queryID === request.__queryID);
+        const result = searchResponseAdapter.transform(response, request, clientOptions);
+        return [...acc, result];
       }, []);
 
       return { results };

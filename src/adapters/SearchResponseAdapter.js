@@ -22,6 +22,7 @@ const SearchResponseAdapter = () => {
     const nbHits = results.count ?? 0;
     const nbPages = Math.ceil(nbHits / hitsPerPage);
     const index = results.id ?? request?.indexName;
+    const queryID = results.__queryID ?? index;
 
     return {
       facets,
@@ -33,7 +34,7 @@ const SearchResponseAdapter = () => {
       nbPages,
       page,
       query,
-      queryID: index,
+      queryID,
     };
   };
 

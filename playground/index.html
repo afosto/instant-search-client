@@ -66,10 +66,6 @@
               });
 
               search.addWidgets([
-                instantsearch.widgets.configure({
-                  facets: ['main_genre', 'release_year_range'],
-                }),
-
                 instantsearch.widgets.searchBox({
                   container: '#searchbox',
                 }),
@@ -84,9 +80,8 @@
 
                 instantsearch.widgets.dynamicWidgets({
                   container: '#dynamic-list',
-                  facets: [],
                   transformItems(_, { results }) {
-                    return results.facets.map(facet => facet.name);
+                    return Object.keys(results._rawResults[0].facets);
                   },
                   widgets: filterKeys.map((attribute) => (container) =>
                     instantsearch.widgets.panel({

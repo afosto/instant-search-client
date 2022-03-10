@@ -1,6 +1,6 @@
 export const DEFAULT_OPTIONS = {
   allowEmptyQuery: true,
-  baseUrl: 'https://afosto.io/api/instant/search/{key}',
+  baseUrl: 'https://afosto.app/api/instant/search/{key}',
   hitsPerPage: 10,
   requestOptions: {},
   settingsRequestOptions: {},
