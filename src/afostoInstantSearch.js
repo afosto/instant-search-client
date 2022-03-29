@@ -1,6 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import { SearchResponseAdapter, SearchRequestAdapter } from './adapters';
 import { DEFAULT_OPTIONS } from './constants';
+import getSessionID from './utils/getSessionID';
 
 /**
  * Afosto instant search client
@@ -18,6 +19,7 @@ const afostoInstantSearch = (searchEngineKey, options = {}) => {
   const url = clientOptions.baseUrl?.replace('{key}', searchEngineKey);
   const searchRequestAdapter = SearchRequestAdapter();
   const searchResponseAdapter = SearchResponseAdapter();
+  const sessionID = getSessionID();
 
   const getSettings = async () => {
     try {
@@ -56,7 +58,7 @@ const afostoInstantSearch = (searchEngineKey, options = {}) => {
 
   const search = async requests => {
     try {
-      const searchRequests = requests.map(request => ({ ...request, __queryID: uuid() }));
+      const searchRequests = requests.map(request => ({ ...request, session_id: sessionID, __queryID: uuid() }));
       const searchContexts = searchRequestAdapter.transform(searchRequests, clientOptions);
       const [searchRequestContext] = searchContexts;
 

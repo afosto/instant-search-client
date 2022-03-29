@@ -18,3 +18,5 @@ export const OPERATOR_CONVERSION = {
   '<=': 'lte',
   '=': 'in',
 };
+
+export const SESSION_KEY = 'afostoInstantSearch_sessionID';
