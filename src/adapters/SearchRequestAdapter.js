@@ -119,6 +119,7 @@ const SearchRequestAdapter = () => {
         indices: [request.indexName],
         q: query,
         threshold: options.threshold || DEFAULT_OPTIONS.threshold,
+        session_id: request.session_id,
         __queryID: request.__queryID,
         ...pagination,
       }];
