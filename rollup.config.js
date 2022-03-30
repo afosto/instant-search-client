@@ -30,6 +30,9 @@ module.exports = [
   {
     input: INPUT,
     plugins: [nodeResolve()],
+    external: [
+      'uuid-random',
+    ],
     output: [
       {
         dir: 'dist/esm',
