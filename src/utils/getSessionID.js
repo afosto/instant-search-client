@@ -1,5 +1,5 @@
-import { v4 as uuid } from 'uuid';
 import { SESSION_KEY } from '../constants';
+import uuid from '../utils/uuid';
 
 const getSessionID = () => {
   const isBrowser = typeof window !== 'undefined';

@@ -1,7 +1,7 @@
-import { v4 as uuid } from 'uuid';
 import { SearchResponseAdapter, SearchRequestAdapter } from './adapters';
 import { DEFAULT_OPTIONS } from './constants';
 import getSessionID from './utils/getSessionID';
+import uuid from './utils/uuid';
 
 /**
  * Afosto instant search client
