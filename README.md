@@ -99,7 +99,7 @@ async function initSearch() {
   const [firstIndex] = settings.indexes || [];
   
   const search = instantsearch({
-    indexName: firstIndex,
+    indexName: firstIndex.alias,
     searchClient: client,
   });
   
