@@ -20,6 +20,10 @@ const afostoInstantSearch = (searchEngineKey, options = {}) => {
   const searchRequestAdapter = SearchRequestAdapter();
   const searchResponseAdapter = SearchResponseAdapter();
   const sessionID = getSessionID();
+  const searchQueryState = {
+    querySessionID: null,
+    query: null,
+  };
 
   const getSettings = async () => {
     try {
@@ -30,10 +34,26 @@ const afostoInstantSearch = (searchEngineKey, options = {}) => {
       });
       const response = await settingsResponse.json();
 
-      return response.data;
+      return response.data || {};
     } catch (error) {
       return {};
     }
+  };
+
+  const setSearchQueryState = requests => {
+    const { allowEmptyQuery = true } = clientOptions;
+    const [firstRequest] = requests || [];
+    const { query } = firstRequest?.params || {};
+    const lastQuery = searchQueryState.query;
+    const querySessionID = searchQueryState.querySessionID;
+    const isNewQuery = !querySessionID || (allowEmptyQuery && lastQuery && !query) ||
+      (!allowEmptyQuery && query?.length === 1 && query?.charAt(0) !== lastQuery?.charAt(0));
+
+    if (isNewQuery) {
+      searchQueryState.querySessionID = uuid();
+    }
+
+    searchQueryState.query = query;
   };
 
   const searchRequest = async contexts => {
@@ -58,7 +78,9 @@ const afostoInstantSearch = (searchEngineKey, options = {}) => {
 
   const search = async requests => {
     try {
-      const searchRequests = requests.map(request => ({ ...request, session_id: sessionID, __queryID: uuid() }));
+      setSearchQueryState(requests);
+
+      const searchRequests = requests.map(request => ({ ...request, session_id: searchQueryState.querySessionID, __queryID: uuid() }));
       const searchContexts = searchRequestAdapter.transform(searchRequests, clientOptions);
       const [searchRequestContext] = searchContexts;
 

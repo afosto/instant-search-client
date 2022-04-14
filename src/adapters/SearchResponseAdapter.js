@@ -35,6 +35,13 @@ const SearchResponseAdapter = () => {
       page,
       query,
       queryID,
+      renderingContent: {
+        facetOrdering: {
+          facets: {
+            order: Object.keys(facets),
+          },
+        }
+      }
     };
   };
 
