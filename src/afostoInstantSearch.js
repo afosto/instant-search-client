@@ -1,6 +1,6 @@
 import { SearchResponseAdapter, SearchRequestAdapter } from './adapters';
 import { DEFAULT_OPTIONS } from './constants';
-import getSessionID from './utils/getSessionID';
+import getUserID from './utils/getUserID';
 import uuid from './utils/uuid';
 
 /**
@@ -19,7 +19,7 @@ const afostoInstantSearch = (searchEngineKey, options = {}) => {
   const url = clientOptions.baseUrl?.replace('{key}', searchEngineKey);
   const searchRequestAdapter = SearchRequestAdapter();
   const searchResponseAdapter = SearchResponseAdapter();
-  const sessionID = getSessionID();
+  const userID = getUserID();
   const searchQueryState = {
     querySessionID: null,
     query: null,
@@ -80,7 +80,12 @@ const afostoInstantSearch = (searchEngineKey, options = {}) => {
     try {
       setSearchQueryState(requests);
 
-      const searchRequests = requests.map(request => ({ ...request, session_id: searchQueryState.querySessionID, __queryID: uuid() }));
+      const searchRequests = requests.map(request => ({
+        ...request,
+        session_id: searchQueryState.querySessionID,
+        user_id: userID,
+        __queryID: uuid()
+      }));
       const searchContexts = searchRequestAdapter.transform(searchRequests, clientOptions);
       const [searchRequestContext] = searchContexts;
 

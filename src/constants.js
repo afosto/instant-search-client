@@ -19,4 +19,4 @@ export const OPERATOR_CONVERSION = {
   '=': 'in',
 };
 
-export const SESSION_KEY = 'afostoInstantSearch_sessionID';
+export const USER_SESSION_KEY = 'afostoInstantSearch_userSessionID';
