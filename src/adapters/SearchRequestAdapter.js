@@ -120,6 +120,7 @@ const SearchRequestAdapter = () => {
         q: query,
         threshold: options.threshold || DEFAULT_OPTIONS.threshold,
         session_id: request.session_id,
+        user_id: request.user_id,
         __queryID: request.__queryID,
         ...pagination,
       }];
