@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <title>Test</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/algolia-min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-theme-classic/dist/theme.min.css" />
         <style>
             .ais-Hits-list-item .hit-name {
                 font-weight: bold;
@@ -23,9 +24,14 @@
                 display: inline;
                 padding: 8px;
             }
+
+            .aa-Panel {
+                z-index: 2;
+            }
         </style>
     </head>
     <body>
+    <div id="autocomplete"></div>
         <div>
             <div style="display:flex">
                 <div id="dynamic-list" style="padding:20px">
@@ -45,6 +51,8 @@
             </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-plugin-query-suggestions"></script>
         <script>
           async function initSearchDemo() {
             try {
@@ -60,9 +68,15 @@
 
               const { alias: indexName, filters = [] } = firstIndex;
               const filterKeys = filters.map(filter => filter.key);
+
+              const router = instantsearch.routers.history();
+
               const search = instantsearch({
                 indexName,
                 searchClient,
+                routing: {
+                  router,
+                },
               });
 
               search.addWidgets([
@@ -80,9 +94,6 @@
 
                 instantsearch.widgets.dynamicWidgets({
                   container: '#dynamic-list',
-                  transformItems(_, { results }) {
-                    return Object.keys(results._rawResults[0].facets);
-                  },
                   widgets: filterKeys.map((attribute) => (container) =>
                     instantsearch.widgets.panel({
                       templates: {
@@ -129,6 +140,68 @@
               ]);
 
               search.start();
+
+              function setInstantSearchUiState(indexUiState) {
+                search.setUiState(uiState => {
+                  return {
+                    ...uiState,
+                    [indexName]: {
+                      ...uiState[indexName],
+                      page: 1,
+                      ...indexUiState,
+                    },
+                  };
+                });
+              }
+
+              function getInstantSearchUiState() {
+                const uiState = router.read();
+                return (uiState && uiState[indexName]) || {}
+              }
+
+              const searchPageState = getInstantSearchUiState();
+
+              const createQuerySuggestionsPlugin = window['@algolia/autocomplete-plugin-query-suggestions'].createQuerySuggestionsPlugin;
+              const querySuggestionsPlugin = createQuerySuggestionsPlugin({
+                searchClient,
+                indexName,
+                getSearchParams() {
+                  return { hitsPerPage: 4 };
+                },
+                transformSource({ source }) {
+                  return {
+                    ...source,
+                   templates: {
+                      ...source.templates,
+                     item(params) {
+                        const { item, html } = params;
+                        return html`<div>${item.title}</div>`;
+                     },
+                   },
+                  };
+                },
+              });
+
+              window['@algolia/autocomplete-js'].autocomplete({
+                container: '#autocomplete',
+                placeholder: 'Search for products',
+                detachedMediaQuery: 'none',
+                initialState: {
+                  query: searchPageState.query || '',
+                },
+                plugins: [querySuggestionsPlugin],
+                onSubmit({ state }) {
+                  setInstantSearchUiState({ query: state.query })
+                },
+                onReset() {
+                  setInstantSearchUiState({ query: '' })
+                },
+                onStateChange({ prevState, state }) {
+                  if (prevState.query !== state.query) {
+                    setInstantSearchUiState({ query: state.query })
+                  }
+                },
+              });
             } catch (error) {
 
             }
