@@ -41,19 +41,22 @@ const afostoInstantSearch = (searchEngineKey, options = {}) => {
   };
 
   const setSearchQueryState = requests => {
-    const { allowEmptyQuery = true } = clientOptions;
     const [firstRequest] = requests || [];
     const { query } = firstRequest?.params || {};
+    const searchQuery = query || firstRequest?.query;
     const lastQuery = searchQueryState.query;
     const querySessionID = searchQueryState.querySessionID;
-    const isNewQuery = !querySessionID || (allowEmptyQuery && lastQuery && !query) ||
-      (!allowEmptyQuery && query?.length === 1 && query?.charAt(0) !== lastQuery?.charAt(0));
+    const isNewQuery = !querySessionID ||
+      (!!lastQuery &&
+        (!searchQuery?.length || searchQuery?.length === 1) &&
+        searchQuery?.charAt(0) !== lastQuery?.charAt(0)
+      );
 
     if (isNewQuery) {
       searchQueryState.querySessionID = uuid();
     }
 
-    searchQueryState.query = query;
+    searchQueryState.query = searchQuery;
   };
 
   const searchRequest = async contexts => {
