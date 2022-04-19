@@ -1,6 +1,6 @@
 {
   "name": "@afosto/instant-search-client",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "private": false,
   "description": "The Afosto InstantSearch client",
   "main": "./dist/afosto-instant-search.min.js",
