@@ -12,6 +12,12 @@
 <p>
 This library is an Afosto search client plugin for the open-source <a href="https://github.com/algolia/instantsearch.js">InstantSearch.js</a> library (powered by Algolia). With this plugin you can use the amazing widgets of the InstantSearch.js library, while communicating with the Afosto search API.
 </p>
+<br />
+<img src="https://qcqcdn.com/afosto/instant_search_demo_page_7dd20c983c/instant_search_demo_page_7dd20c983c.gif">
+
+
+> Don't want to implement your own UI? You can also try our [Afosto instant search widget](https://github.com/afosto/instant-search-widget).
+
 
 ## Installation
 
@@ -47,7 +53,9 @@ This library supports the **last two** versions of major browsers (Chrome, Edge,
 
 ## Getting started
 
-First you initialize the Afosto search client with your **search engine key**. This search engine key can be found in the Afosto app.
+> To use the client you will need an Afosto search engine. Don't have one yet? Sign up on [Afosto.com](https://afosto.com/register/) and follow [the guides in our documentation](https://afosto.com/docs/apps/instant-search/).
+
+First you initialize the Afosto search client with your **search engine key**. This search engine key can be found in the [Afosto app](https://afosto.app/).
 
 ### ES6
 
@@ -118,7 +126,7 @@ You can use the initialized Afosto client with the [React InstantSearch](https:/
 
 ```js
 import { afostoInstantSearch } from '@afosto/instant-search-client';
-import { InstantSearch, SearchBox, Hits } from 'react-instantsearch-dom';
+import { InstantSearch, SearchBox, Hits } from 'react-instantsearch-hooks-web';
 
 const searchClient = afostoInstantSearch('my-search-engine-key');
 
