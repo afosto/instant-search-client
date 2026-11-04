@@ -49,8 +49,6 @@
   "devDependencies": {
     "@changesets/changelog-github": "^1.0.1",
     "@changesets/cli": "^3.0.3",
-    "@commitlint/cli": "^21.2.4",
-    "@commitlint/config-conventional": "^21.2.4",
     "@types/node": "^26.6.6",
     "oxfmt": "^0.75.0",
     "oxlint": "^1.90.0",

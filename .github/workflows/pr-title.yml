@@ -1,24 +1,35 @@
-# The PR title becomes the squash commit on master, so it has to follow the conventional commit format.
+# PR titles follow the branch name (`Fix/...`, `Feature/...`), which becomes the squash commit on master.
 name: PR title
 
 on:
-  pull_request:
-    types: [opened, edited, synchronize, reopened]
+  # pull_request_target can edit the title of PRs from forks. It never checks out the PR code.
+  pull_request_target:
+    types: [opened, edited, reopened]
 
 permissions:
-  contents: read
+  pull-requests: write
 
 jobs:
-  commitlint:
+  branch-name:
     runs-on: ubuntu-latest
+    if: >-
+      !startsWith(github.head_ref, 'changeset-release/') &&
+      !startsWith(github.head_ref, 'dependabot/') &&
+      !startsWith(github.head_ref, 'renovate/')
     steps:
-      - uses: actions/checkout@v7
-      - uses: pnpm/action-setup@v6
-      - uses: actions/setup-node@v7
-        with:
-          node-version-file: .nvmrc
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: echo "$PR_TITLE" | pnpm exec commitlint --verbose
+      - name: Check the branch name
+        run: |
+          if [[ ! "$BRANCH" =~ ^(Feature|Fix|Chore|Refactor|Docs|Test|CI)/[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
+            echo "::error::Branch \"$BRANCH\" must look like Type/short-description, with Type one of Feature, Fix, Chore, Refactor, Docs, Test or CI."
+            exit 1
+          fi
         env:
-          PR_TITLE: ${{ github.event.pull_request.title }}
+          BRANCH: ${{ github.head_ref }}
+      - name: Use the branch name as PR title
+        if: github.event.pull_request.title != github.head_ref
+        run: gh pr edit "$NUMBER" --repo "$REPO" --title "$BRANCH"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ github.head_ref }}
+          NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}

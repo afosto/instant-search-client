@@ -168,7 +168,7 @@ pnpm build      # dist/ (ESM, type definitions and the browser build)
 
 ### Pull requests
 
-PRs are squash merged, so the PR title becomes the commit on `master`. It has to follow [Conventional Commits](https://www.conventionalcommits.org/), for example `fix: keep the query session between pages`. CI checks this with commitlint.
+Name your branch `Type/short-description`, with `Type` one of `Feature`, `Fix`, `Chore`, `Refactor`, `Docs`, `Test` or `CI`, for example `Fix/keep-query-session`. The PR title is set to the branch name automatically, and PRs are squash merged, so that title becomes the commit on `master`.
 
 ### Releasing
 
