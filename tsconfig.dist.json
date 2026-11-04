@@ -1,0 +1,5 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["test/searchClient.dist.types.ts"],
+  "exclude": []
+}

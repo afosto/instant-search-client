@@ -1,5 +1,15 @@
 # @afosto/instant-search-client
 
+## 2.0.1
+
+### Patch Changes
+
+- [#19](https://github.com/afosto/instant-search-client/pull/19) Thanks [@Rapid0o](https://github.com/Rapid0o)! - Make the client assignable to InstantSearch's `SearchClient` with algoliasearch v5, so `searchClient={afostoInstantSearch(key)}` typechecks without a cast.
+
+  - `facetFilters` and `numericFilters` accept a bare string and nested (readonly) arrays, both in the types and at runtime. Requests that worked in 2.0.0 are sent unchanged.
+  - `facets` accepts a readonly array.
+  - `searchForFacetValues()` resolves to `{ facetHits: [], exhaustiveFacetsCount: true }`.
+
 ## 2.0.0
 
 ### Major Changes

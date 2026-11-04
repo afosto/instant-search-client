@@ -1,6 +1,6 @@
 {
   "name": "@afosto/instant-search-client",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "private": false,
   "description": "The Afosto InstantSearch client",
   "keywords": [
@@ -34,12 +34,13 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "tsdown",
+    "build": "tsdown && pnpm run typecheck:dist",
     "dev": "vite",
     "lint": "oxlint",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
     "typecheck": "tsc --noEmit",
+    "typecheck:dist": "tsc --noEmit -p tsconfig.dist.json",
     "test": "vitest run",
     "test:watch": "vitest",
     "prepublishOnly": "pnpm run build",
@@ -52,7 +53,9 @@
     "@changesets/cli": "^3.0.3",
     "@commitlint/cli": "^21.2.4",
     "@types/node": "^26.6.6",
+    "algoliasearch": "^5.61.0",
     "husky": "^9.1.7",
+    "instantsearch.js": "^4.122.0",
     "oxfmt": "^0.75.0",
     "oxlint": "^1.90.0",
     "tsdown": "^0.23.4",

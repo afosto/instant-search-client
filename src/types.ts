@@ -20,15 +20,16 @@ export interface AfostoInstantSearchOptions {
   transformResponse?: (response: AfostoSearchResponse) => AfostoSearchResponse;
 }
 
-export type FacetFilter = string | string[];
+/** A filter, or a group of filters that InstantSearch OR-s, nested to any depth. */
+export type FacetFilter = string | readonly FacetFilter[];
 
 export interface InstantSearchRequestParams {
   query?: string;
   page?: number;
   hitsPerPage?: number;
-  facets?: string | string[];
-  facetFilters?: FacetFilter[];
-  numericFilters?: string[];
+  facets?: string | readonly string[];
+  facetFilters?: FacetFilter;
+  numericFilters?: FacetFilter;
   [key: string]: unknown;
 }
 
@@ -113,5 +114,5 @@ export interface AfostoSettings {
 export interface AfostoInstantSearchClient {
   getSettings: () => Promise<AfostoSettings>;
   search: (requests: readonly InstantSearchRequest[]) => Promise<{ results: InstantSearchResult[] }>;
-  searchForFacetValues: () => Promise<{ facetHits: [] }>;
+  searchForFacetValues: () => Promise<{ facetHits: []; exhaustiveFacetsCount: boolean }>;
 }

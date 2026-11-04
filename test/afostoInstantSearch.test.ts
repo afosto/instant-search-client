@@ -69,4 +69,16 @@ describe('afostoInstantSearch', () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('offline')));
     expect(await afostoInstantSearch('key').getSettings()).toEqual({});
   });
+
+  it('answers searchForFacetValues with no facet hits', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    await expect(afostoInstantSearch('key').searchForFacetValues()).resolves.toEqual({
+      facetHits: [],
+      exhaustiveFacetsCount: true,
+    });
+    expect(warn).toHaveBeenCalledOnce();
+
+    warn.mockRestore();
+  });
 });
