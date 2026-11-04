@@ -178,6 +178,9 @@ importers:
       '@types/node':
         specifier: ^26.6.6
         version: 26.6.6
+      husky:
+        specifier: ^9.1.7
+        version: 9.1.7
       oxfmt:
         specifier: ^0.75.0
         version: 0.75.0
@@ -1127,6 +1130,11 @@ packages:
 
   human-id@4.2.2:
     resolution: {integrity: sha512-Z+8unD6em/MJwyrkWQ2M3wygRGI1+MztbutiNwk1DCuEPXOZRWGjtcMPZYP1exY9iNZMhd7ZOSMQSo9WYtiQRw==}
+    hasBin: true
+
+  husky@9.1.7:
+    resolution: {integrity: sha512-5gs5ytaNjBrh5Ow3zrvdUUY+0VxIuWVL4i9irt6friV+BqdCfmV11CQTWMiBYWHbXhco+J1kHfTOUkePhCDvMA==}
+    engines: {node: '>=18'}
     hasBin: true
 
   import-fresh@3.3.1:
@@ -2277,6 +2285,8 @@ snapshots:
   hookable@6.1.2: {}
 
   human-id@4.2.2: {}
+
+  husky@9.1.7: {}
 
   import-fresh@3.3.1:
     dependencies:
