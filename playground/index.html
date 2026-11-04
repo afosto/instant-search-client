@@ -1,130 +1,145 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Test</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/algolia-min.css" />
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-theme-classic/dist/theme.min.css" />
-        <style>
-            .ais-Hits-list-item .hit-name {
-                font-weight: bold;
-                margin-bottom: 4px;
-                margin-top: 12px;
-            }
+  <head>
+    <meta charset="UTF-8" />
+    <title>Test</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/algolia-min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-theme-classic/dist/theme.min.css" />
+    <style>
+      .ais-Hits-list-item .hit-name {
+        font-weight: bold;
+        margin-bottom: 4px;
+        margin-top: 12px;
+      }
 
-            .ais-Hits-list-item .hit-description {
-                margin-top: 12px;
-            }
+      .ais-Hits-list-item .hit-description {
+        margin-top: 12px;
+      }
 
-            .ais-Panel {
-                margin-bottom: 32px;
-            }
+      .ais-Panel {
+        margin-bottom: 32px;
+      }
 
-            .ais-Pagination-list li {
-                display: inline;
-                padding: 8px;
-            }
+      .ais-Pagination-list li {
+        display: inline;
+        padding: 8px;
+      }
 
-            .aa-Panel {
-                z-index: 2;
-            }
-        </style>
-    </head>
-    <body>
+      .aa-Panel {
+        z-index: 2;
+      }
+    </style>
+  </head>
+  <body>
     <div id="autocomplete"></div>
-        <div>
-            <div style="display:flex">
-                <div id="dynamic-list" style="padding:20px">
-                </div>
-                <div style="flex:1;padding:20px">
-                    <div id="searchbox"></div>
-                    <div>
-                        <h2>Products</h2>
-                        <div id="stats-products"></div>
-                        <div id="hits-products"></div>
-                    </div>
-                    <div style="display:flex">
-                        <div id="hits-per-page"></div>
-                        <div id="pagination"></div>
-                    </div>
-                </div>
-            </div>
+    <div>
+      <div style="display: flex">
+        <div id="dynamic-list" style="padding: 20px"></div>
+        <div style="flex: 1; padding: 20px">
+          <div id="searchbox"></div>
+          <div>
+            <h2>Products</h2>
+            <div id="stats-products"></div>
+            <div id="hits-products"></div>
+          </div>
+          <div style="display: flex">
+            <div id="hits-per-page"></div>
+            <div id="pagination"></div>
+          </div>
         </div>
-        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-plugin-query-suggestions"></script>
-        <script>
-          async function initSearchDemo() {
-            try {
-              const searchClient = afostoInstantSearch('movies-demo');
-              const settings = await searchClient.getSettings();
-              const indexes = settings.indexes || [];
-              const [firstIndex] = indexes;
+      </div>
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-plugin-query-suggestions"></script>
+    <script type="module">
+      // Expose the client from source, like the browser build does.
+      import { afostoInstantSearch } from '../src/index.ts';
+      window.afostoInstantSearch = afostoInstantSearch;
+    </script>
+    <script>
+      async function initSearchDemo() {
+        try {
+          const searchClient = afostoInstantSearch('movies-demo');
+          const settings = await searchClient.getSettings();
+          const indexes = settings.indexes || [];
+          const [firstIndex] = indexes;
 
-              if (!firstIndex) {
-                console.error('No index available');
-                return;
-              }
+          if (!firstIndex) {
+            console.error('No index available');
+            return;
+          }
 
-              const { alias: indexName, filters = [] } = firstIndex;
-              const filterKeys = filters.map(filter => filter.key);
+          const { alias: indexName, filters = [] } = firstIndex;
+          const filterKeys = filters.map(filter => filter.key);
 
-              const router = instantsearch.routers.history();
+          const router = instantsearch.routers.history();
 
-              const search = instantsearch({
-                indexName,
-                searchClient,
-                routing: {
-                  router,
-                },
-              });
+          const search = instantsearch({
+            indexName,
+            searchClient,
+            routing: {
+              router,
+            },
+          });
 
-              search.addWidgets([
-                instantsearch.widgets.searchBox({
-                  container: '#searchbox',
-                }),
+          search.addWidgets([
+            instantsearch.widgets.searchBox({
+              container: '#searchbox',
+            }),
 
-                instantsearch.widgets.hitsPerPage({
-                  container: '#hits-per-page',
-                  items: [
-                    { label: '10 hits per page', value: 10, default: true },
-                    { label: '20 hits per page', value: 20 },
-                  ],
-                }),
+            instantsearch.widgets.hitsPerPage({
+              container: '#hits-per-page',
+              items: [
+                { label: '10 hits per page', value: 10, default: true },
+                { label: '20 hits per page', value: 20 },
+              ],
+            }),
 
-                instantsearch.widgets.dynamicWidgets({
-                  container: '#dynamic-list',
-                  widgets: filterKeys.map((attribute) => (container) =>
-                    instantsearch.widgets.panel({
-                      templates: {
-                        header({ widgetParams: { attribute } = {} } = {}) {
-                          return attribute;
-                        },
+            instantsearch.widgets.dynamicWidgets({
+              container: '#dynamic-list',
+              widgets: filterKeys.map(
+                attribute => container =>
+                  instantsearch.widgets.panel({
+                    templates: {
+                      header({ widgetParams: { attribute } = {} } = {}) {
+                        return attribute;
                       },
-                    })(instantsearch.widgets.refinementList)({ container, attribute, operator: 'and', searchable: false, showMore: true, showMoreLimit: 500 })
-                  ),
-                }),
+                    },
+                  })(instantsearch.widgets.refinementList)({
+                    container,
+                    attribute,
+                    operator: 'and',
+                    searchable: false,
+                    showMore: true,
+                    showMoreLimit: 500,
+                  }),
+              ),
+            }),
 
-                instantsearch.widgets.pagination({
-                  container: '#pagination',
-                }),
+            instantsearch.widgets.pagination({
+              container: '#pagination',
+            }),
 
-                instantsearch.widgets.stats({
-                  container: '#stats-products',
-                  templates: {
-                    text: `
+            instantsearch.widgets.stats({
+              container: '#stats-products',
+              templates: {
+                text: `
                           {{#hasNoResults}}No results{{/hasNoResults}}
                           {{#hasOneResult}}1 result{{/hasOneResult}}
                           {{#hasManyResults}}{{#helpers.formatNumber}}{{nbHits}}{{/helpers.formatNumber}} results{{/hasManyResults}}
                           found
                         `,
-                  },
-                }),
+              },
+            }),
 
-                instantsearch.widgets.hits({
-                  container: '#hits-products',
-                  templates: {
-                    item: `
+            instantsearch.widgets.hits({
+              container: '#hits-products',
+              templates: {
+                item: `
                         <div class="ais-Hits-list-item">
                           <img src="{{poster}}" alt="{{title}}" width="100%" />
                           <div class="hit-name">
@@ -135,81 +150,80 @@
                           </div>
                         </div>
                       `,
-                  },
-                }),
-              ]);
+              },
+            }),
+          ]);
 
-              search.start();
+          search.start();
 
-              function setInstantSearchUiState(indexUiState) {
-                search.setUiState(uiState => {
-                  return {
-                    ...uiState,
-                    [indexName]: {
-                      ...uiState[indexName],
-                      page: 1,
-                      ...indexUiState,
-                    },
-                  };
-                });
-              }
-
-              function getInstantSearchUiState() {
-                const uiState = router.read();
-                return (uiState && uiState[indexName]) || {}
-              }
-
-              const searchPageState = getInstantSearchUiState();
-
-              const createQuerySuggestionsPlugin = window['@algolia/autocomplete-plugin-query-suggestions'].createQuerySuggestionsPlugin;
-              const querySuggestionsPlugin = createQuerySuggestionsPlugin({
-                searchClient,
-                indexName,
-                getSearchParams() {
-                  return { hitsPerPage: 4 };
+          function setInstantSearchUiState(indexUiState) {
+            search.setUiState(uiState => {
+              return {
+                ...uiState,
+                [indexName]: {
+                  ...uiState[indexName],
+                  page: 1,
+                  ...indexUiState,
                 },
-                transformSource({ source }) {
-                  return {
-                    ...source,
-                   templates: {
-                      ...source.templates,
-                     item(params) {
-                        const { item, html } = params;
-                        return html`<div>${item.title}</div>`;
-                     },
-                   },
-                  };
-                },
-              });
-
-              window['@algolia/autocomplete-js'].autocomplete({
-                container: '#autocomplete',
-                placeholder: 'Search for products',
-                detachedMediaQuery: 'none',
-                initialState: {
-                  query: searchPageState.query || '',
-                },
-                plugins: [querySuggestionsPlugin],
-                onSubmit({ state }) {
-                  setInstantSearchUiState({ query: state.query })
-                },
-                onReset() {
-                  setInstantSearchUiState({ query: '' })
-                },
-                onStateChange({ prevState, state }) {
-                  if (prevState.query !== state.query) {
-                    setInstantSearchUiState({ query: state.query })
-                  }
-                },
-              });
-            } catch (error) {
-
-            }
+              };
+            });
           }
 
-          document.addEventListener('DOMContentLoaded', function() {
-            initSearchDemo();
+          function getInstantSearchUiState() {
+            const uiState = router.read();
+            return (uiState && uiState[indexName]) || {};
+          }
+
+          const searchPageState = getInstantSearchUiState();
+
+          const createQuerySuggestionsPlugin =
+            window['@algolia/autocomplete-plugin-query-suggestions'].createQuerySuggestionsPlugin;
+          const querySuggestionsPlugin = createQuerySuggestionsPlugin({
+            searchClient,
+            indexName,
+            getSearchParams() {
+              return { hitsPerPage: 4 };
+            },
+            transformSource({ source }) {
+              return {
+                ...source,
+                templates: {
+                  ...source.templates,
+                  item(params) {
+                    const { item, html } = params;
+                    return html`<div>${item.title}</div>`;
+                  },
+                },
+              };
+            },
           });
-        </script>
-    </body>
+
+          window['@algolia/autocomplete-js'].autocomplete({
+            container: '#autocomplete',
+            placeholder: 'Search for products',
+            detachedMediaQuery: 'none',
+            initialState: {
+              query: searchPageState.query || '',
+            },
+            plugins: [querySuggestionsPlugin],
+            onSubmit({ state }) {
+              setInstantSearchUiState({ query: state.query });
+            },
+            onReset() {
+              setInstantSearchUiState({ query: '' });
+            },
+            onStateChange({ prevState, state }) {
+              if (prevState.query !== state.query) {
+                setInstantSearchUiState({ query: state.query });
+              }
+            },
+          });
+        } catch (error) {}
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        initSearchDemo();
+      });
+    </script>
+  </body>
 </html>
