@@ -30,18 +30,41 @@ export const SearchRequestAdapter = (): SearchRequestAdapterInstance => {
       return [requestFacets];
     }
 
-    return (requestFacets as string[] | undefined) || [];
+    return requestFacets ? [...requestFacets] : [];
+  };
+
+  /**
+   * Collect every filter string in a nested group, at any depth.
+   * @param {Array} group
+   * @returns {Array}
+   */
+  const flatten = (group: readonly FacetFilter[]): string[] => {
+    return group.reduce<string[]>(
+      (acc, filter) => (typeof filter === 'string' ? [...acc, filter] : [...acc, ...flatten(filter)]),
+      [],
+    );
+  };
+
+  /**
+   * Normalise instant search filters into groups: a bare string becomes one group,
+   * and every item of an array becomes a group of its (flattened) strings.
+   * @param {String|Array} filters
+   * @returns {Array}
+   */
+  const toGroups = (filters?: FacetFilter): string[][] => {
+    if (!filters) return [];
+    if (typeof filters === 'string') return [[filters]];
+    return filters.map(group => (typeof group === 'string' ? [group] : flatten(group)));
   };
 
   /**
    * Transform facet instant search filters to Afosto request filters.
    * The values of a nested array are OR-ed by InstantSearch, so they become one "in" filter.
-   * @param {Array} filters
+   * @param {String|Array} filters
    * @returns {Array}
    */
-  const transformFacetFilters = (filters: FacetFilter[] | undefined): SearchFilter[] => {
-    return (filters || []).reduce<SearchFilter[]>((acc, facetFilters) => {
-      const group = Array.isArray(facetFilters) ? facetFilters : [facetFilters];
+  const transformFacetFilters = (filters?: FacetFilter): SearchFilter[] => {
+    return toGroups(filters).reduce<SearchFilter[]>((acc, group) => {
       const [key] = group[0]?.split(':') ?? [];
       const values = group.reduce<string[]>((groupValues, filter) => {
         const [filterKey, value] = filter?.split(':') ?? [];
@@ -63,22 +86,25 @@ export const SearchRequestAdapter = (): SearchRequestAdapterInstance => {
 
   /**
    * Transform numeric instant search filters to Afosto request filters.
-   * @param {Array} filters
+   * Every filter of a nested array becomes its own filter.
+   * @param {String|Array} filters
    * @returns {Array}
    */
-  const transformNumericFilters = (filters: string[] | undefined): SearchFilter[] => {
-    return (filters || []).reduce<SearchFilter[]>((acc, numericFilter) => {
-      const matches = numericFilter.matchAll(MATCH_FILTER_REGEX);
-      const [match] = [...matches];
-      const [, key, operator, value] = match ?? [];
-      const convertedOperator = operator ? OPERATOR_CONVERSION[operator] : undefined;
+  const transformNumericFilters = (filters?: FacetFilter): SearchFilter[] => {
+    return toGroups(filters)
+      .flat()
+      .reduce<SearchFilter[]>((acc, numericFilter) => {
+        const matches = numericFilter.matchAll(MATCH_FILTER_REGEX);
+        const [match] = [...matches];
+        const [, key, operator, value] = match ?? [];
+        const convertedOperator = operator ? OPERATOR_CONVERSION[operator] : undefined;
 
-      if (key && convertedOperator && value) {
-        return [...acc, { key, operator: convertedOperator, values: [value] }];
-      }
+        if (key && convertedOperator && value) {
+          return [...acc, { key, operator: convertedOperator, values: [value] }];
+        }
 
-      return acc;
-    }, []);
+        return acc;
+      }, []);
   };
 
   /**

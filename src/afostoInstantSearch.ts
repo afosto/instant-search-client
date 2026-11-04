@@ -121,9 +121,9 @@ export const afostoInstantSearch = (
     return { results };
   };
 
-  const searchForFacetValues = async (): Promise<{ facetHits: [] }> => {
+  const searchForFacetValues = async (): Promise<{ facetHits: []; exhaustiveFacetsCount: boolean }> => {
     console.warn("The Afosto instant search client currently doesn't support searching for facet values");
-    return { facetHits: [] };
+    return { facetHits: [], exhaustiveFacetsCount: true };
   };
 
   return {
