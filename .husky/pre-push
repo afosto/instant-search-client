@@ -1,0 +1,8 @@
+# Check the branch name before it reaches GitHub, renaming it after a PR is opened means a new PR.
+branch=$(git rev-parse --abbrev-ref HEAD)
+
+case "$branch" in
+  HEAD | master | changeset-release/* | dependabot/* | renovate/*) exit 0 ;;
+esac
+
+echo "$branch" | pnpm exec commitlint

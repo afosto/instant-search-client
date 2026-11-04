@@ -3,63 +3,65 @@
   "version": "1.0.9",
   "private": false,
   "description": "The Afosto InstantSearch client",
-  "main": "./dist/afosto-instant-search.min.js",
-  "module": "./dist/esm/index.js",
-  "browser": "./dist/afosto-instant-search.min.js",
-  "cjs": "./dist/cjs/index.js",
-  "source": "src/index.js",
-  "sideEffects": false,
+  "keywords": [
+    "client",
+    "instantsearch",
+    "search"
+  ],
   "bugs": {
     "url": "https://github.com/afosto/instant-search-client/issues"
   },
-  "files": [
-    "dist",
-    "src"
-  ],
-  "scripts": {
-    "cleanup": "rimraf dist",
-    "prebuild": "rimraf dist",
-    "build": "cross-env NODE_ENV=production rollup -c",
-    "start": "webpack serve --open",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [
-    "search",
-    "instantsearch",
-    "client"
-  ],
-  "author": "Afosto Saas BV",
   "license": "MIT",
+  "author": "Afosto Saas BV",
   "repository": {
     "type": "git",
     "url": "https://github.com/afosto/instant-search-client.git"
   },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "types": "./dist/index.d.ts",
+  "unpkg": "./dist/afosto-instant-search.min.js",
+  "jsdelivr": "./dist/afosto-instant-search.min.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./browser": "./dist/afosto-instant-search.min.js",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "vite",
+    "lint": "oxlint",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepublishOnly": "pnpm run build",
+    "changeset": "changeset",
+    "release": "pnpm run build && changeset publish",
+    "prepare": "husky"
+  },
   "devDependencies": {
-    "@babel/core": "^7.16.5",
-    "@babel/plugin-transform-runtime": "^7.16.5",
-    "@babel/preset-env": "^7.16.5",
-    "@rollup/plugin-babel": "^5.3.0",
-    "@rollup/plugin-commonjs": "^21.0.1",
-    "@rollup/plugin-node-resolve": "^13.1.1",
-    "babel-loader": "^8.2.3",
-    "clean-webpack-plugin": "^3.0.0",
-    "core-js": "^3.20.0",
-    "cross-env": "^7.0.3",
-    "html-webpack-plugin": "^5.5.0",
-    "rimraf": "^3.0.2",
-    "rollup": "^2.61.1",
-    "rollup-plugin-terser": "^7.0.2",
-    "webpack": "^5.65.0",
-    "webpack-cli": "^4.9.1",
-    "webpack-dev-server": "^4.6.0"
+    "@changesets/changelog-github": "^1.0.1",
+    "@changesets/cli": "^3.0.3",
+    "@commitlint/cli": "^21.2.4",
+    "@types/node": "^26.6.6",
+    "husky": "^9.1.7",
+    "oxfmt": "^0.75.0",
+    "oxlint": "^1.90.0",
+    "tsdown": "^0.23.4",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5",
+    "vitest": "^5.1.0"
   },
-  "dependencies": {
-    "uuid-random": "^1.3.2"
+  "engines": {
+    "node": ">=22"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  "packageManager": "pnpm@12.4.1"
 }

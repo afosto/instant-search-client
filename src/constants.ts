@@ -1,4 +1,6 @@
-export const DEFAULT_OPTIONS = {
+import type { AfostoInstantSearchOptions, FilterOperator } from './types';
+
+export const DEFAULT_OPTIONS: Required<AfostoInstantSearchOptions> = {
   allowEmptyQuery: true,
   baseUrl: 'https://afosto.app/api/instant/search/{key}',
   hitsPerPage: 10,
@@ -9,9 +11,9 @@ export const DEFAULT_OPTIONS = {
   transformResponse: data => data,
 };
 
-export const MATCH_FILTER_REGEX = /(?<key>[\w'-]+)(?<operator>>=|>|<|<=|=)(?<value>\d+)/g;
+export const MATCH_FILTER_REGEX: RegExp = /(?<key>[\w'-]+)(?<operator>>=|>|<|<=|=)(?<value>\d+)/g;
 
-export const OPERATOR_CONVERSION = {
+export const OPERATOR_CONVERSION: Record<string, FilterOperator> = {
   '>=': 'gte',
   '>': 'gt',
   '<': 'lt',
