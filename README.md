@@ -166,6 +166,10 @@ pnpm typecheck  # TypeScript
 pnpm build      # dist/ (ESM, type definitions and the browser build)
 ```
 
+### Pull requests
+
+PRs are squash merged, so the PR title becomes the commit on `master`. It has to follow [Conventional Commits](https://www.conventionalcommits.org/), for example `fix: keep the query session between pages`. CI checks this with commitlint.
+
 ### Releasing
 
 Releases are managed with [changesets](https://github.com/changesets/changesets).
