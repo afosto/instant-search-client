@@ -15,39 +15,36 @@ This library is an Afosto search client plugin for the open-source <a href="http
 <br />
 <img src="https://qcqcdn.com/afosto/instant_search_demo_page_7dd20c983c/instant_search_demo_page_7dd20c983c.gif">
 
-
 > Don't want to implement your own UI? You can also try our [Afosto instant search widget](https://github.com/afosto/instant-search-widget).
-
 
 ## Installation
 
 ### Basic
 
 ```sh
-# Install with Yarn
-yarn add @afosto/instant-search-client instantsearch.js
+# Install with pnpm
+pnpm add @afosto/instant-search-client instantsearch.js
 
-# Install with NPM
+# Install with npm
 npm install @afosto/instant-search-client instantsearch.js
 ```
 
 ### React
 
 ```sh
-# Install with Yarn
-yarn add @afosto/instant-search-client react-instantsearch-dom
+# Install with pnpm
+pnpm add @afosto/instant-search-client react-instantsearch
 
-# Install with NPM
-npm install @afosto/instant-search-client react-instantsearch-dom
+# Install with npm
+npm install @afosto/instant-search-client react-instantsearch
 ```
-
 
 ### Browser
 
 This library supports the **last two** versions of major browsers (Chrome, Edge, Firefox, Safari).
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@afosto/instant-search-client@latest/dist/afosto-instant-search.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@afosto/instant-search-client@2/dist/afosto-instant-search.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js"></script>
 ```
 
@@ -57,7 +54,7 @@ This library supports the **last two** versions of major browsers (Chrome, Edge,
 
 First you initialize the Afosto search client with your **search engine key**. This search engine key can be found in the [Afosto app](https://afosto.app/).
 
-### ES6
+### ES modules
 
 ```js
 import { afostoInstantSearch } from '@afosto/instant-search-client';
@@ -65,12 +62,17 @@ import { afostoInstantSearch } from '@afosto/instant-search-client';
 const client = afostoInstantSearch('my-search-engine-key');
 ```
 
-### CJS
+The package is ESM only. Node 22+ can still `require()` it.
 
-```js
-const { afostoInstantSearch } = require('@afosto/instant-search-client');
+### TypeScript
 
-const client = afostoInstantSearch('my-search-engine-key');
+The package ships its own type definitions, no extra `@types` package is needed.
+
+```ts
+import { afostoInstantSearch, type AfostoInstantSearchOptions } from '@afosto/instant-search-client';
+
+const options: AfostoInstantSearchOptions = { hitsPerPage: 20 };
+const client = afostoInstantSearch('my-search-engine-key', options);
 ```
 
 ### Browser
@@ -105,16 +107,16 @@ const client = afostoInstantSearch('my-search-engine-key');
 async function initSearch() {
   const settings = await client.getSettings();
   const [firstIndex] = settings.indexes || [];
-  
+
   const search = instantsearch({
     indexName: firstIndex.alias,
     searchClient: client,
   });
-  
+
   // Do something with the settings.
   // For example render filters dynamically.
 
-  search.start(); 
+  search.start();
 }
 
 initSearch();
@@ -126,7 +128,7 @@ You can use the initialized Afosto client with the [React InstantSearch](https:/
 
 ```js
 import { afostoInstantSearch } from '@afosto/instant-search-client';
-import { InstantSearch, SearchBox, Hits } from 'react-instantsearch-hooks-web';
+import { InstantSearch, SearchBox, Hits } from 'react-instantsearch';
 
 const searchClient = afostoInstantSearch('my-search-engine-key');
 
@@ -143,7 +145,26 @@ For more information check the React InstantSearch [documentation](https://www.a
 ## Compatibility
 
 - InstantSearch.js v4
-- Node >= 14
+- Node >= 22
+
+## Upgrading from 1.x
+
+- The package is ESM only, the CommonJS build (`dist/cjs`) is removed. Bundlers and Node 22+ handle this without changes.
+- The ESM build moved from `dist/esm/index.js` to `dist/index.js`. Import from `@afosto/instant-search-client` instead of a `dist` path.
+- The browser build keeps its name (`dist/afosto-instant-search.min.js`) and still exposes `window.afostoInstantSearch`.
+- `uuid-random` is no longer a dependency.
+
+## Development
+
+```sh
+pnpm install
+pnpm dev        # Playground on http://localhost:5173
+pnpm test       # Unit tests (Vitest)
+pnpm lint       # oxlint
+pnpm format     # oxfmt
+pnpm typecheck  # TypeScript
+pnpm build      # dist/ (ESM, type definitions and the browser build)
+```
 
 ## License
 
