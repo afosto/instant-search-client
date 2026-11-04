@@ -168,7 +168,7 @@ pnpm build      # dist/ (ESM, type definitions and the browser build)
 
 ### Pull requests
 
-Name your branch `Type/short-description`, with `Type` one of `Feature`, `Fix`, `Chore`, `Refactor`, `Docs`, `Test` or `CI`, for example `Fix/keep-query-session`. The PR title is set to the branch name automatically, and PRs are squash merged, so that title becomes the commit on `master`.
+Name your branch `Type/short-description`, with `Type` one of `Feature`, `Fix`, `Chore`, `Refactor`, `Docs`, `Test` or `CI`, for example `Fix/keep-query-session`. The PR title is set to the branch name automatically, and PRs are squash merged, so that title becomes the commit on `master`. CI checks the branch name with commitlint, see `commitlint.config.js`.
 
 ### Releasing
 

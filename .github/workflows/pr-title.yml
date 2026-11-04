@@ -2,11 +2,13 @@
 name: PR title
 
 on:
-  # pull_request_target can edit the title of PRs from forks. It never checks out the PR code.
+  # pull_request_target can edit the title of PRs from forks. It runs the workflow and commitlint
+  # config from master, and never checks out the PR code.
   pull_request_target:
     types: [opened, edited, reopened]
 
 permissions:
+  contents: read
   pull-requests: write
 
 jobs:
@@ -17,12 +19,15 @@ jobs:
       !startsWith(github.head_ref, 'dependabot/') &&
       !startsWith(github.head_ref, 'renovate/')
     steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
       - name: Check the branch name
-        run: |
-          if [[ ! "$BRANCH" =~ ^(Feature|Fix|Chore|Refactor|Docs|Test|CI)/[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
-            echo "::error::Branch \"$BRANCH\" must look like Type/short-description, with Type one of Feature, Fix, Chore, Refactor, Docs, Test or CI."
-            exit 1
-          fi
+        run: echo "$BRANCH" | pnpm exec commitlint --verbose
         env:
           BRANCH: ${{ github.head_ref }}
       - name: Use the branch name as PR title
