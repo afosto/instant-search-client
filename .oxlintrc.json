@@ -19,7 +19,7 @@
   "ignorePatterns": ["dist"],
   "overrides": [
     {
-      "files": ["src/browser.ts", "*.config.ts", "*.config.js"],
+      "files": ["*.config.ts", "*.config.js"],
       "rules": {
         "import/no-default-export": "off"
       }

@@ -152,7 +152,8 @@ For more information check the React InstantSearch [documentation](https://www.a
 - The package is ESM only, the CommonJS build (`dist/cjs`) is removed. Bundlers and Node 22+ handle this without changes.
 - The ESM build moved from `dist/esm/index.js` to `dist/index.js`. Import from `@afosto/instant-search-client` instead of a `dist` path.
 - The default export is removed. Replace `import afostoInstantSearch from '@afosto/instant-search-client'` with `import { afostoInstantSearch } from '@afosto/instant-search-client'`.
-- The browser build keeps its name (`dist/afosto-instant-search.min.js`) and still exposes `window.afostoInstantSearch`.
+- The browser build keeps its name (`dist/afosto-instant-search.min.js`) and still exposes `window.afostoInstantSearch`, now also on pages with an AMD loader such as RequireJS.
+- The browser build targets ES2020 (Chrome 80, Firefox 74, Safari 13.1 and later) and no longer includes polyfills.
 - `uuid-random` is no longer a dependency.
 
 ## Development

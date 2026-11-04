@@ -10,10 +10,9 @@ export default defineConfig([
     sourcemap: true,
   },
   {
-    // Script tag build, exposes `window.afostoInstantSearch`.
+    // Script tag build, src/browser.ts sets `window.afostoInstantSearch`.
     entry: { 'afosto-instant-search.min': 'src/browser.ts' },
     format: 'iife',
-    globalName: 'afostoInstantSearch',
     platform: 'browser',
     target: 'es2020',
     minify: true,
