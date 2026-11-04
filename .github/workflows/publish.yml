@@ -1,15 +1,20 @@
-name: Publish
+# Opens a "Version Packages" PR for pending changesets, and publishes to npm once that PR is merged.
+# Keep this file name: it is registered as the trusted publisher on npm.
+name: Release
 
 on:
-  release:
-    types: [created]
+  push:
+    branches: [master]
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 permissions:
-  contents: read
+  contents: write
+  pull-requests: write
   id-token: write
 
 jobs:
-  publish:
+  release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -23,5 +28,10 @@ jobs:
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm test
-      # Authenticates with npm trusted publishing (OIDC), which also adds provenance.
-      - run: pnpm publish --access public --no-git-checks
+      # Publishing authenticates with npm trusted publishing (OIDC), which also adds provenance.
+      - uses: changesets/action@v2
+        with:
+          version-script: pnpm changeset version
+          publish-script: pnpm release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

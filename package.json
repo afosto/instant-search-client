@@ -1,6 +1,6 @@
 {
   "name": "@afosto/instant-search-client",
-  "version": "2.0.0",
+  "version": "1.0.9",
   "private": false,
   "description": "The Afosto InstantSearch client",
   "keywords": [
@@ -42,9 +42,13 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "prepublishOnly": "pnpm run build"
+    "prepublishOnly": "pnpm run build",
+    "changeset": "changeset",
+    "release": "pnpm run build && changeset publish"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^1.0.1",
+    "@changesets/cli": "^3.0.3",
     "@types/node": "^26.6.6",
     "oxfmt": "^0.75.0",
     "oxlint": "^1.90.0",

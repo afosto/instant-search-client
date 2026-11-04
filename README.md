@@ -166,6 +166,14 @@ pnpm typecheck  # TypeScript
 pnpm build      # dist/ (ESM, type definitions and the browser build)
 ```
 
+### Releasing
+
+Releases are managed with [changesets](https://github.com/changesets/changesets).
+
+1. Run `pnpm changeset` in your PR, pick the version bump and describe the change.
+2. After merging to `master`, a "Version Packages" PR is opened that bumps the version and updates the `CHANGELOG.md`.
+3. Merging that PR publishes the new version to npm and creates the GitHub release.
+
 ## License
 
 This project is licensed under the terms of the [MIT license](https://github.com/afosto/instant-search-client/blob/master/LICENSE).
