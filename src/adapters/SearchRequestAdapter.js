@@ -23,21 +23,26 @@ const SearchRequestAdapter = () => {
 
   /**
    * Transform facet instant search filters to Afosto request filters.
+   * The values of a nested array are OR-ed by InstantSearch, so they become one "in" filter.
    * @param {Array} filters
    * @returns {*}
    */
   const transformFacetFilters = filters => {
     return (filters || []).reduce((acc, facetFilters) => {
-      let filter = facetFilters;
+      const group = Array.isArray(facetFilters) ? facetFilters : [facetFilters];
+      const [key] = group[0]?.split(':') ?? [];
+      const values = group.reduce((groupValues, filter) => {
+        const [filterKey, value] = filter?.split(':') ?? [];
 
-      if (Array.isArray(facetFilters)) {
-        filter = facetFilters[0];
-      }
+        if (filterKey === key && value) {
+          return [...groupValues, value];
+        }
 
-      const [key, value] = filter?.split(':') ?? [];
+        return groupValues;
+      }, []);
 
-      if (key && value) {
-        return [...acc, { key, operator: 'in', values: [value] }];
+      if (key && values.length) {
+        return [...acc, { key, operator: 'in', values }];
       }
 
       return acc;
