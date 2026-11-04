@@ -80,33 +80,31 @@ const afostoInstantSearch = (searchEngineKey, options = {}) => {
   }
 
   const search = async requests => {
-    try {
-      setSearchQueryState(requests);
+    setSearchQueryState(requests);
 
-      const searchRequests = requests.map(request => ({
-        ...request,
-        session_id: searchQueryState.querySessionID,
-        user_id: userID,
-        __queryID: uuid()
-      }));
-      const searchContexts = searchRequestAdapter.transform(searchRequests, clientOptions);
-      const [searchRequestContext] = searchContexts;
+    const searchRequests = requests.map(request => ({
+      ...request,
+      session_id: searchQueryState.querySessionID,
+      user_id: userID,
+      __queryID: uuid()
+    }));
+    const searchContexts = searchRequestAdapter.transform(searchRequests, clientOptions);
+    const [searchRequestContext] = searchContexts;
 
-      if (!clientOptions.allowEmptyQuery && !searchRequestContext?.q) {
-        return searchResponseAdapter.transform({}, searchRequests, clientOptions);
-      }
-
-      const responses = await searchRequest(searchContexts);
-      const results = searchRequests.reduce((acc, request) => {
-        const response = responses.find(value => value.__queryID === request.__queryID);
-        const result = searchResponseAdapter.transform(response, request, clientOptions);
-        return [...acc, result];
-      }, []);
+    if (!clientOptions.allowEmptyQuery && !searchRequestContext?.q) {
+      const results = searchRequests.map(request => searchResponseAdapter.transform({}, request, clientOptions));
 
       return { results };
-    } catch (err) {
-      return searchResponseAdapter.transform({}, requests, clientOptions);
     }
+
+    const responses = await searchRequest(searchContexts);
+    const results = searchRequests.reduce((acc, request) => {
+      const response = responses.find(value => value.__queryID === request.__queryID);
+      const result = searchResponseAdapter.transform(response, request, clientOptions);
+      return [...acc, result];
+    }, []);
+
+    return { results };
   };
 
   const searchForFacetValues = async () => {
