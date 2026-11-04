@@ -23,6 +23,5 @@ jobs:
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm test
-      - run: pnpm publish --access public --provenance --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # Authenticates with npm trusted publishing (OIDC), which also adds provenance.
+      - run: pnpm publish --access public --no-git-checks
