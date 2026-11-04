@@ -6,9 +6,23 @@
     "suspicious": "warn"
   },
   "rules": {
-    "no-underscore-dangle": ["warn", { "allow": ["__queryID"] }],
+    "no-underscore-dangle": [
+      "warn",
+      {
+        "allow": ["__queryID"]
+      }
+    ],
     "unicorn/consistent-function-scoping": "off",
-    "vitest/require-mock-type-parameters": "off"
+    "vitest/require-mock-type-parameters": "off",
+    "import/no-default-export": "error"
   },
-  "ignorePatterns": ["dist"]
+  "ignorePatterns": ["dist"],
+  "overrides": [
+    {
+      "files": ["src/browser.ts", "*.config.ts", "*.config.js"],
+      "rules": {
+        "import/no-default-export": "off"
+      }
+    }
+  ]
 }

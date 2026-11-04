@@ -19,7 +19,7 @@ export interface SearchResponseAdapterInstance {
  * @returns {Object}
  * @constructor
  */
-const SearchResponseAdapter = (): SearchResponseAdapterInstance => {
+export const SearchResponseAdapter = (): SearchResponseAdapterInstance => {
   /**
    * Transform the Afosto index results to instant search request results.
    * @param {Object} results
@@ -94,5 +94,3 @@ const SearchResponseAdapter = (): SearchResponseAdapterInstance => {
 
   return { transform };
 };
-
-export default SearchResponseAdapter;

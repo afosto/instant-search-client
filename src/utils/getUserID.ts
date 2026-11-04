@@ -1,7 +1,7 @@
 import { USER_SESSION_KEY } from '../constants';
-import uuid from './uuid';
+import { uuid } from './uuid';
 
-const getUserID = (): string => {
+export const getUserID = (): string => {
   const isBrowser = typeof window !== 'undefined';
   const hasSessionStorage = isBrowser && !!window.sessionStorage;
 
@@ -18,5 +18,3 @@ const getUserID = (): string => {
 
   return userSessionID;
 };
-
-export default getUserID;

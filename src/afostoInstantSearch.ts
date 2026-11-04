@@ -10,8 +10,8 @@ import type {
   SearchContext,
   SearchRequest,
 } from './types';
-import getUserID from './utils/getUserID';
-import uuid from './utils/uuid';
+import { getUserID } from './utils/getUserID';
+import { uuid } from './utils/uuid';
 
 /**
  * Afosto instant search client
@@ -20,7 +20,7 @@ import uuid from './utils/uuid';
  * @returns {Object}
  * @constructor
  */
-const afostoInstantSearch = (
+export const afostoInstantSearch = (
   searchEngineKey: string,
   options: AfostoInstantSearchOptions = {},
 ): AfostoInstantSearchClient => {
@@ -132,5 +132,3 @@ const afostoInstantSearch = (
     searchForFacetValues,
   };
 };
-
-export default afostoInstantSearch;

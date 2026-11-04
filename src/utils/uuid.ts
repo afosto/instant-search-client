@@ -3,7 +3,7 @@
  * `crypto.randomUUID` only exists in secure contexts (https), so fall back to `crypto.getRandomValues`.
  * @returns {String}
  */
-const uuid = (): string => {
+export const uuid = (): string => {
   if (typeof crypto.randomUUID === 'function') {
     return crypto.randomUUID();
   }
@@ -15,5 +15,3 @@ const uuid = (): string => {
 
   return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
 };
-
-export default uuid;

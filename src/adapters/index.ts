@@ -1,2 +1,2 @@
-export { default as SearchResponseAdapter } from './SearchResponseAdapter';
-export { default as SearchRequestAdapter } from './SearchRequestAdapter';
+export { SearchResponseAdapter } from './SearchResponseAdapter';
+export { SearchRequestAdapter } from './SearchRequestAdapter';

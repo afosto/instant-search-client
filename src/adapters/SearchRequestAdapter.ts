@@ -17,7 +17,7 @@ export interface SearchRequestAdapterInstance {
  * @returns {Object}
  * @constructor
  */
-const SearchRequestAdapter = (): SearchRequestAdapterInstance => {
+export const SearchRequestAdapter = (): SearchRequestAdapterInstance => {
   /**
    * Transform the instant search request facets to Afosto request facets.
    * @param request
@@ -152,5 +152,3 @@ const SearchRequestAdapter = (): SearchRequestAdapterInstance => {
 
   return { transform };
 };
-
-export default SearchRequestAdapter;

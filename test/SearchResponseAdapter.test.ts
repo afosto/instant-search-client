@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import SearchResponseAdapter from '../src/adapters/SearchResponseAdapter';
+import { SearchResponseAdapter } from '../src/adapters/SearchResponseAdapter';
 
 describe('SearchResponseAdapter', () => {
   const { transform } = SearchResponseAdapter();

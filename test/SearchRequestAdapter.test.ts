@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import SearchRequestAdapter from '../src/adapters/SearchRequestAdapter';
+import { SearchRequestAdapter } from '../src/adapters/SearchRequestAdapter';
 import type { SearchRequest } from '../src/types';
 
 const createRequest = (params: SearchRequest['params'] = {}): SearchRequest => ({

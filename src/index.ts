@@ -1,6 +1,2 @@
-import afostoInstantSearch from './afostoInstantSearch';
-
-export { afostoInstantSearch };
+export { afostoInstantSearch } from './afostoInstantSearch';
 export type * from './types';
-
-export default afostoInstantSearch;
